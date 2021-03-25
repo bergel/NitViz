@@ -31,7 +31,7 @@ NitVizTest >> testExample [
 NitVizTest >> testTopicKeywords [
 	| words |
 	words := model topicKeywords.
-	self assert: words size equals: 99.
+	self assert: words size equals: 80.
 	self assert: words asSet size equals: words size.
 ]
 
