@@ -85,6 +85,19 @@ NVModel >> inspectorNameCloudContext: aContext [
 	aContext withoutEvaluator
 ]
 
+{ #category : #visualization }
+NVModel >> inspectorStack [
+	<inspectorPresentationOrder: 90 title: 'Stack'>
+	^ SpRoassal3InspectorPresenter new
+		canvas: self stack;
+		yourself
+]
+
+{ #category : #visualization }
+NVModel >> inspectorStackContext: aContext [
+	aContext withoutEvaluator
+]
+
 { #category : #accessing }
 NVModel >> keywords [
 
@@ -123,6 +136,35 @@ NVModel >> nameCloud [
 	m normalizeFontSize: #numberOfEntries from: 10 to: 25.
 	m build.
 	^ m canvas
+]
+
+{ #category : #visualization }
+NVModel >> stack [
+
+| c g shape es allMainTopics scale |
+c := RSCanvas new.
+
+years do: [ :aYear |
+	g := RSGroup new.
+	g addAll: (RSBox models: (aYear entries sortedAs: [ :en | en mainRETopics])).
+	RSGridLayout new lineItemsCount: 4; on: g.
+	g @ RSPopup.
+	shape := g asShapeFor: aYear.
+	shape padding: 5.
+	shape color: Color veryVeryLightGray.
+	c add: shape.
+].
+
+RSHorizontalLineLayout on: c shapes.
+
+c shapes @ (RSLabeled new text: #year).
+
+es := c deepShapesFromModels: self entries.
+allMainTopics := (es collect: [:ss | ss model mainRETopics]) asSet asSortedCollection asArray.
+scale := NSScale ordinalColored: allMainTopics size.
+es do: [ :aShape | aShape color: (scale scale: aShape model mainRETopics) ].
+
+^ c @ RSCanvasController.
 ]
 
 { #category : #accessing }
