@@ -147,7 +147,7 @@ c := RSCanvas new.
 years do: [ :aYear |
 	g := RSGroup new.
 	g addAll: (RSBox models: (aYear entries sortedAs: [ :en | en mainRETopics])).
-	RSGridLayout new lineItemsCount: 4; on: g.
+	RSGridLayout new lineItemsCount: 3; on: g.
 	g @ RSPopup.
 	shape := g asShapeFor: aYear.
 	shape padding: 5.
