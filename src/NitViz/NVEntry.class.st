@@ -104,7 +104,7 @@ NVEntry >> toolIdentifier: anObject [
 
 { #category : #'as yet unclassified' }
 NVEntry >> topicKeywords [
-	^ (mainRETopics, ' ', subtopics substrings: ' , -/@', String crlf) collect: #asLowercase
+	^ (mainRETopics", ' ', subtopics" substrings: ' , -/@', String crlf) collect: #asLowercase
 ]
 
 { #category : #accessing }
