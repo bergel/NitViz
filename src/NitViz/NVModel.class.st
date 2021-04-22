@@ -5,14 +5,14 @@ Class {
 		'entries',
 		'years',
 		'tools',
-		'keywords'
+		'mainTopics'
 	],
 	#category : #NitViz
 }
 
 { #category : #building }
 NVModel >> build [
-	| dic year tool wordsTmp aKeyword |
+	| dic year tool wordsTmp aMainTopic |
 	dic := self entries groupedBy: #year.
 	years := OrderedCollection new.
 	dic associations do: [ :assoc |
@@ -29,17 +29,18 @@ NVModel >> build [
 		tool entries: assoc value.
 		tools add: tool ].
 	
-	keywords := OrderedCollection new.
-	wordsTmp := self topicKeywords.
+	mainTopics := OrderedCollection new.
+	wordsTmp := (entries flatCollect: #mainRETopicsAsWords) removeDuplicates.
 	wordsTmp do: [ :w |
-		aKeyword := NVKeyword new.
-		keywords add: aKeyword.
-		aKeyword keyword: w.
+		aMainTopic := NVMainTopic new.
+		aMainTopic keyword: w.
+		mainTopics add: aMainTopic.
+		
 		self entries do: [ :e |
-			(e topicKeywords includes: w)
+			(e mainRETopicsAsWords includes: w)
 				ifTrue: [ 
-					aKeyword addEntry: e.
-					e addKeyword: aKeyword.
+					aMainTopic addEntry: e.
+					e addMainTopic: aMainTopic.
 					 ] ]
 		 ].
 	
@@ -63,7 +64,7 @@ NVModel >> entries: someEntries [
 NVModel >> inspectorKeywordsInteraction [
 	<inspectorPresentationOrder: 90 title: 'Keywords'>
 	^ SpRoassal3InspectorPresenter new
-		canvas: self keywordsInteraction;
+		canvas: self mainTopicsInteraction;
 		yourself
 ]
 
@@ -99,29 +100,29 @@ NVModel >> inspectorStackContext: aContext [
 ]
 
 { #category : #accessing }
-NVModel >> keywords [
+NVModel >> mainTopics [
 
-	^ keywords
+	^ mainTopics
 ]
 
 { #category : #accessing }
-NVModel >> keywords: someKeywords [
+NVModel >> mainTopics: someMainTopics [
 
-	keywords := someKeywords
+	mainTopics := someMainTopics
 ]
 
 { #category : #visualization }
-NVModel >> keywordsInteraction [
+NVModel >> mainTopicsInteraction [
 
 	| m |
 	m := RSMondrian new.
 	m shape label.
-	m nodes: self keywords.
+	m nodes: self mainTopics.
 	m line
 		withBorderAttachPoint;
 		noBidirectional;
 		moveBehind;
-		connectToAll: #connectedKeywords.
+		connectToAll: #connectedTopics.
 	m layout force.
 	m build.
 	^ m canvas
@@ -129,42 +130,65 @@ NVModel >> keywordsInteraction [
 
 { #category : #visualization }
 NVModel >> nameCloud [
-	| m |
+	| m lb |
 	m := RSMondrian new.
 	m shape label.
-	m nodes: keywords. 
+	m nodes: mainTopics. 
 	m normalizeFontSize: #numberOfEntries from: 10 to: 25.
+	m layout flow alignLabel.
 	m build.
+	
+	m canvas nodes @ RSHighlightable red.
+	
+	lb := RSLegend new.
+	lb onDemand.
+	lb container: m canvas.
+	lb title: 'Name cloud'.
+	lb text: 'Each word is a main topic'.
+	lb text: 'Color of each entry reflect the mainRETopic'.
+	lb build.
+
 	^ m canvas
 ]
 
 { #category : #visualization }
 NVModel >> stack [
 
-| c g shape es allMainTopics scale |
-c := RSCanvas new.
+	| c g shape es allMainTopics scale lb |
+	c := RSCanvas new.
 
-years do: [ :aYear |
-	g := RSGroup new.
-	g addAll: (RSBox models: (aYear entries sortedAs: [ :en | en mainRETopics])).
-	RSGridLayout new lineItemsCount: 3; on: g.
-	g @ RSPopup.
-	shape := g asShapeFor: aYear.
-	shape padding: 5.
-	shape color: Color veryVeryLightGray.
-	c add: shape.
-].
+	years do: [ :aYear | 
+		g := RSGroup new.
+		g addAll:
+			(RSBox models: (aYear entries sortedAs: [ :en | en mainRETopicsAsString ])).
+		RSGridLayout new
+			lineItemsCount: 3;
+			on: g.
+		g @ (RSPopup text: [ :entry | entry mainRETopicsAsString ]).
+		shape := g asShapeFor: aYear.
+		shape padding: 5.
+		shape color: Color veryVeryLightGray.
+		c add: shape ].
 
-RSHorizontalLineLayout on: c shapes.
+	RSHorizontalLineLayout on: c shapes.
 
-c shapes @ (RSLabeled new text: #year).
+	c shapes @ (RSLabeled new text: #year).
 
-es := c deepShapesFromModels: self entries.
-allMainTopics := (es collect: [:ss | ss model mainRETopics]) asSet asSortedCollection asArray.
-scale := NSScale ordinalColored: allMainTopics size.
-es do: [ :aShape | aShape color: (scale scale: aShape model mainRETopics) ].
+	es := c deepShapesFromModels: self entries.
+	allMainTopics := (es collect: [ :ss | ss model mainRETopicsAsString ]) asSet
+		                 asSortedCollection asArray.
+	scale := NSScale ordinalColored: allMainTopics size.
+	es do: [ :aShape | 
+		aShape color: (scale scale: aShape model mainRETopicsAsString) ].
 
-^ c @ RSCanvasController.
+	lb := RSLegend new.
+	lb container: c.
+	lb title: 'Stack visualization'.
+	lb text: 'Each inner box is an entry'.
+	lb text: 'Color of each entry reflect the mainRETopics'.
+	lb build.
+
+	^ c @ RSCanvasController
 ]
 
 { #category : #accessing }
@@ -177,11 +201,6 @@ NVModel >> tools [
 NVModel >> tools: anObject [
 
 	tools := anObject
-]
-
-{ #category : #accessing }
-NVModel >> topicKeywords [
-	^ (self entries flatCollect: #topicKeywords) asSet asSortedCollection asArray
 ]
 
 { #category : #accessing }

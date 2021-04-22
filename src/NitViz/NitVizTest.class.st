@@ -30,12 +30,13 @@ NitVizTest >> testExample [
 { #category : #tests }
 NitVizTest >> testTopicKeywords [
 	| words |
-	words := model topicKeywords.
-	self assert: words size equals: 80.
+	words := model mainTopics.
+	self assert: words size equals: 33.
 	self assert: words asSet size equals: words size.
 ]
 
 { #category : #tests }
 NitVizTest >> testVisualization [
-	model inspectorNameCloud
+	model inspectorNameCloud; stack; nameCloud; mainTopicsInteraction.
+	
 ]

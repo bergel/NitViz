@@ -31,6 +31,32 @@ NitVizExample >> data [
 ]
 
 { #category : #'as yet unclassified' }
+NitVizExample >> data3 [
+	<script: 'self new data3 inspect'>
+	"
+	self new data
+	"
+	| entries raw entry |
+	entries := OrderedCollection new.
+	raw := (NeoCSVReader on: self dataAsString3 readStream) upToEnd.
+	raw := raw allButFirst. 
+	
+	raw do: [ :aLine |
+		entry := NVEntry new.
+		entry index: aLine first asInteger.
+		entry toolIdentifier: aLine second.
+		entry year: aLine third asInteger.
+		"entry activities: aLine fourth."
+		entry mainRETopicsAsString: aLine fourth.
+		entry subtopics: aLine fifth.
+		entry otherTopics: aLine sixth.
+		entries add: entry
+	].
+	
+	^ entries.
+]
+
+{ #category : #'as yet unclassified' }
 NitVizExample >> dataAsString [
 
 ^ 'Index,Tool identifier,Year,Activities,Main RE topic,Subtopics,Other topics
@@ -786,6 +812,156 @@ GORE",-'
 ]
 
 { #category : #'as yet unclassified' }
+NitVizExample >> dataAsString3 [
+	^ 'Index,Tool identifier,Year,Main RE topic,Subtopic,Other topic
+1,T1,2019,Requirements documentation quality,Use Case,NLP
+2,T2,2019,CrowdRE,User feedback,"ML,
+NLP"
+3,T3,2019,Requirements validation,Prototyping,-
+4,T4,2019,GORE,i* modelling,-
+5,T5,2019,GORE,i* modelling,-
+6,T6,2018,Requirements and tests,-,NLP
+7,T7,2018,Requirements@Runtime,"Monitoring, 
+Traceability",-
+8,T8,2018,Requirements and tests,Use Case,"NLP,
+Agile"
+9,T9,2018,GORE,i* modelling,-
+10,T10,2018,Requirements extraction,-,"NLP,
+ML"
+11,T11,2018,RE and usability evaluations,Modelling,-
+12,T12,2018,GORE,i*modelling,-
+13,T13,2018,RE and software sustainability,-,-
+14,T14,2018,Requirements management,User stories,Agile
+15,T15,2018,CrowdRE,"User feedback,
+Monitoring",ML
+16,T16,2017,GORE,"Model reasoning,
+i*modelling",ML
+17,T17,2017,Requirements and tests,-,-
+18,T18,2017,Requirements prioritization,Gamification,"Collaborative,
+Distributed"
+19,T19,2017,Requirements documentation quality,Use Case,NLP
+20,T20,2017,CrowdRE,-,ML
+21,T21,2017,CrowdRE,Requirements visualization,"Collaborative,
+ML"
+22,T22,2017,Requirements and tests,Requirements validation,-
+23,T23,2017,Requirements extraction,CrowdRE,"ML,
+NLP"
+24,T24,2017,Requirements documentation quality,Requirements authoring,NLP
+25,T25,2016,GORE,i*modelling,-
+26,T26,2016,Video-based RE,-,-
+27,T27,2016,Requirements modelling,"Model extraction/generation,
+User stories",NLP
+28,T28,2016,Requirements and tests,-,Collaborative
+29,T29,2016,Requirements modelling,CrowdRE,Collaborative
+30,T30,2016,Requirements traceability,-,-
+31,T31,2016,RE and mobile software development,Use case,-
+32,T32,2015,Requirements documentation quality,User stories,"Agile,
+NLP"
+33,T33,2015,Requirements modelling,Sketching,Collaborative
+34,T34,2015,Requirements@Runtime,Requirements and uncertainty,ML
+35,T35,2015,Requirements documentation quality,-,NLP
+36,T36,2015,RE and software architecture,NFR,-
+37,T37,2015,Requirements extraction,-,-
+38,T38,2015,GORE,-,-
+39,T39,2015,GORE,-,-
+40,T40,2019,CrowdRE,User feedback,NLP
+41,T41,2018,Automated classification,Requirements documentation quality,"NLP,
+ML"
+42,T42,2018,Requirements documentation quality,User stories,"Agile,
+NLP"
+43,T43,2017,RE and software product lines,-,-
+44,T44,2017,Requirements traceability,GORE,NLP
+45,T45,2017,Requirements documentation quality,-,NLP
+46,T46,2016,GORE,-,-
+47,T47,2016,Requirements modelling,,RE education/training
+48,T48,2015,Safety/Security requirements,GORE,-
+49,T49,2015,Formal specification,-,NLP
+50,T50,2019,RE and software architecture,"Variability modelling,
+RE and software product lines",-
+51,T51,2019,CrowdRE,-,-
+52,T52,2019,RE and mobile software development,-,-
+53,T53,2019,RE and mobile software development ,Prototyping,-
+54,T54,2019,Requirements and uncertainty,-,Agile
+55,T55,2019,RE and robotics,-,NLP
+56,T56,2019,CrowdRE,User feedback,NLP
+57,T57,2018,CrowdRE,User feedback,NLP
+58,T58,2018,RE and mobile software development ,-,ML
+59,T59,2017,Requirements extraction,User stories,"Agile,
+ML,
+NLP"
+60,T60,2017,RE and software architecture,GORE,-
+61,T61,2017,Formal specification,Requirements documentation quality,-
+62,T62,2015,Requirements management,"Impact analysis,
+Change management",NLP
+63,T63,2019,Formal specification,-,-
+64,T64,2019,RE and business engineering,-,NLP
+65,T65,2017,RE and business engineering,-,-
+66,T66,2017,RE and usability evaluations,-,Agile
+67,T67,2016,Requirements modelling,"Use case,
+Model extraction/generation",NLP
+68,T68,2016,Requirements validation,Use case,Collaborative
+69,T69,2018,Requirements extraction,Source code,-
+70,T70,2019,Requirements documentation quality,Use case,NLP
+71,T71,2019,Requirements and tests,-,NLP
+72,T72,2019,Safety/Security requirements,Formal specification,-
+73,T73,2019,RE and business engineering ,Information requirements gathering,-
+74,T74,2018,Values and emotions in RE,-,-
+75,T75,2018,Safety/Security requirements,Requirements generation,-
+76,T76,2018,Requirements management,"Requirements visualization,
+CrowdRE","NLP,
+ML"
+77,T77,2018,Requirements management,Requirements visualization,Agile
+78,T78,2018,GORE,-,-
+79,T79,2018,RE and business engineering,Information quality,-
+80,T80,2018,CrowdRE,-,Agile
+81,T81,2017,RE and business engineering,-,"Collaborative,
+Agile"
+82,T82,2017,Requirements modelling,"User stories,
+Model extraction/generation","Agile,
+NLP"
+83,T83,2017,RE and legal,Requirements documentation quality,NLP
+84,T84,2017,RE and software sustainability,-,ML
+85,T85,2017,Adaptive systems,GORE,ML
+86,T86,2016,RE and business engineering,-,Collaborative
+87,T87,2016,CrowdRE,-,"ML,
+NLP"
+88,T88,2016,Requirements documentation quality,User stories,"NLP,
+Agile"
+89,T89,2015,Requirements traceability,-,"ML,
+NLP"
+90,T90,2015,RE and legal,Requirements extraction,NLP
+91,T91,2019,CrowdRE,-,"ML,
+NLP"
+92,T92,2015,Requirements prioritization,-,NLP
+93,T93,2018,Requirements validation,-,-
+94,T94,2018,Requirements traceability,-,Collaborative
+95,T95,2018,Requirements and uncertainty,Use case,-
+96,T96,2018,Rquirements and tests,Variability modelling,-
+97,T97,2017,Requirements documentation quality,-,"Agile,
+NLP"
+98,T98,2019,Requirements documentation quality,User stories,"NLP,
+Agile"
+99,T99,2019,Requirements and tests,-,Agile
+100,T100,2019,Information quality,GORE,RE and business engineering
+101,T101,2019,GORE,RE and creativity,-
+102,T102,2018,Safety/Security requirements,-,RE education/training
+103,T103,2018,Requirements extraction,RE and business engineering,BPM
+104,T104,2017,Adaptive systems ,Variability modelling,-
+105,T105,2016,GORE,Requirements@Runtime,-
+106,T106,2016,Requirements documentation quality,-,"NLP,
+ML"
+107,T107,2016,Requirements management,Cost estimation,-
+108,T108,2016,Requirements management,"Impact analysis,
+Change management",Distributed
+109,T109,2015,Requirements modelling,GORE,-
+110,T110,2015,Requirements and software architecture,-,"ML,
+NLP"
+111,T111,2019,Formal specification,-,-
+112,T112,2018, Safety/Security requirements,"i* modelling,
+GORE",-'
+]
+
+{ #category : #'as yet unclassified' }
 NitVizExample >> model [
 	<script: 'self new model inspect'>
 	"
@@ -793,7 +969,7 @@ NitVizExample >> model [
 	"
 	| model |
 	model := NVModel new.
-	model entries: self data.
+	model entries: self data3.
 	model build.
 	^ model
 ]

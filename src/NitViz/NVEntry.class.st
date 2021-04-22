@@ -6,10 +6,10 @@ Class {
 		'toolIdentifier',
 		'year',
 		'activities',
-		'mainRETopics',
 		'subtopics',
 		'otherTopics',
-		'keywords'
+		'mainRETopicsAsString',
+		'mainRETopics'
 	],
 	#category : #NitViz
 }
@@ -27,8 +27,9 @@ NVEntry >> activities: anObject [
 ]
 
 { #category : #adding }
-NVEntry >> addKeyword: aKeyword [
-	keywords add: aKeyword
+NVEntry >> addMainTopic: aMainTopic [
+	self assert: [ aMainTopic class == NVMainTopic ] description: 'Wrong type'.
+	mainRETopics add: aMainTopic
 ]
 
 { #category : #accessing }
@@ -46,12 +47,12 @@ NVEntry >> index: anObject [
 { #category : #initialization }
 NVEntry >> initialize [
 	super initialize.
-	keywords := OrderedCollection new
+	mainRETopics := OrderedCollection new
 ]
 
 { #category : #accessing }
 NVEntry >> keywords [
-	^ keywords
+	^ mainRETopics
 ]
 
 { #category : #accessing }
@@ -61,9 +62,24 @@ NVEntry >> mainRETopics [
 ]
 
 { #category : #accessing }
-NVEntry >> mainRETopics: anObject [
+NVEntry >> mainRETopicsAsString [
+	^ mainRETopicsAsString
+]
 
-	mainRETopics := anObject
+{ #category : #accessing }
+NVEntry >> mainRETopicsAsString: aString [
+
+	mainRETopicsAsString := aString
+]
+
+{ #category : #accessing }
+NVEntry >> mainRETopicsAsWords [
+	^ self mainRETopicsAsString substrings: ','
+]
+
+{ #category : #'as yet unclassified' }
+NVEntry >> mainTopics [
+	^ (mainRETopicsAsString substrings: ',', String crlf) collect: #asLowercase
 ]
 
 { #category : #accessing }
@@ -76,6 +92,18 @@ NVEntry >> otherTopics [
 NVEntry >> otherTopics: anObject [
 
 	otherTopics := anObject
+]
+
+{ #category : #accessing }
+NVEntry >> someMainTopics [
+
+	^ mainRETopicsAsString
+]
+
+{ #category : #accessing }
+NVEntry >> someMainTopics: aString [
+
+	mainRETopicsAsString := aString
 ]
 
 { #category : #accessing }
@@ -100,11 +128,6 @@ NVEntry >> toolIdentifier [
 NVEntry >> toolIdentifier: anObject [
 
 	toolIdentifier := anObject
-]
-
-{ #category : #'as yet unclassified' }
-NVEntry >> topicKeywords [
-	^ (mainRETopics substrings: ',', String crlf) collect: #asLowercase
 ]
 
 { #category : #accessing }
