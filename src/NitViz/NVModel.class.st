@@ -87,6 +87,14 @@ NVModel >> inspectorNameCloudContext: aContext [
 ]
 
 { #category : #visualization }
+NVModel >> inspectorSmallMultiples [
+	<inspectorPresentationOrder: 90 title: 'Multiple'>
+	^ SpRoassal3InspectorPresenter new
+		canvas: self smallMultiples;
+		yourself
+]
+
+{ #category : #visualization }
 NVModel >> inspectorStack [
 	<inspectorPresentationOrder: 90 title: 'Stack'>
 	^ SpRoassal3InspectorPresenter new
@@ -149,6 +157,24 @@ NVModel >> nameCloud [
 	lb build.
 
 	^ m canvas
+]
+
+{ #category : #visualization }
+NVModel >> smallMultiples [
+
+	| canvas shape allShapes |
+	canvas := RSCanvas new.
+	allShapes := self mainTopics collect: [ :t | 
+		             shape := t trendBarchart asShape.
+		             shape model: t.
+		             shape @ (RSLabeled new fontSize: 25).
+		             canvas add: shape.
+		             shape ].
+	RSGridLayout new
+		gapSize: 150;
+		on: allShapes.
+	canvas @ RSCanvasController.
+	^ canvas
 ]
 
 { #category : #visualization }

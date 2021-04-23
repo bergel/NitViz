@@ -106,3 +106,22 @@ NVMainTopic >> trend [
 	
 	^ chart canvas
 ]
+
+{ #category : #'as yet unclassified' }
+NVMainTopic >> trendBarchart [
+	| xData yDataRaw yData chart data |
+	xData := 2015 to: 2019.
+	
+	yDataRaw := xData collect: [ :aYear | (entries select: [ :e | e year = aYear ]) ].
+	yData := yDataRaw collect: #size.
+	
+	chart := RSChart new.
+	chart extent: 300 @ 100.
+	data := RSBarPlot new.
+	data y: yData.
+	chart addPlot: data.
+	
+	chart build.
+	
+	^ chart canvas
+]
