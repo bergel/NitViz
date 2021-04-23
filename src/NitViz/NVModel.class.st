@@ -162,10 +162,11 @@ NVModel >> nameCloud [
 { #category : #visualization }
 NVModel >> smallMultiples [
 
-	| canvas shape allShapes |
+	| canvas shape allShapes maxPub |
 	canvas := RSCanvas new.
+	maxPub := (self mainTopics collect: #maxPub) max.
 	allShapes := self mainTopics collect: [ :t | 
-		             shape := t trendBarchart asShape.
+		             shape := (t trendBarchartWithMax: maxPub) asShape.
 		             shape model: t.
 		             shape @ (RSLabeled new fontSize: 25).
 		             canvas add: shape.

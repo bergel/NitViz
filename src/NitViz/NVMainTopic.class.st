@@ -75,6 +75,14 @@ NVMainTopic >> keyword: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+NVMainTopic >> maxPub [
+	"Return the hightest number of publications per year"
+	
+	^ ((entries groupedBy: #year) associations collect: [ :asso | asso value size ]) max
+	
+]
+
+{ #category : #'as yet unclassified' }
 NVMainTopic >> numberOfEntries [
 	^ entries size
 ]
@@ -121,6 +129,25 @@ NVMainTopic >> trendBarchart [
 	data y: yData.
 	chart addPlot: data.
 	
+	chart build.
+	
+	^ chart canvas
+]
+
+{ #category : #'as yet unclassified' }
+NVMainTopic >> trendBarchartWithMax: aMax [
+	| xData yDataRaw yData chart data |
+	xData := 2015 to: 2019.
+	
+	yDataRaw := xData collect: [ :aYear | (entries select: [ :e | e year = aYear ]) ].
+	yData := yDataRaw collect: #size.
+	
+	chart := RSChart new.
+	chart extent: 300 @ 100.
+	data := RSBarPlot new.
+	data y: yData.
+	chart addPlot: data.
+	chart maxValueY: aMax.
 	chart build.
 	
 	^ chart canvas
