@@ -1,18 +1,11 @@
 Class {
 	#name : #NVMainTopic,
-	#superclass : #Object,
+	#superclass : #NVAbstractTopic,
 	#instVars : [
-		'keyword',
-		'entries',
 		'connectedTo'
 	],
 	#category : #NitViz
 }
-
-{ #category : #adding }
-NVMainTopic >> addEntry: anEntry [
-	entries add: anEntry
-]
 
 { #category : #'as yet unclassified' }
 NVMainTopic >> connectedKeywords [
@@ -36,42 +29,12 @@ NVMainTopic >> connectedTopics [
 	^ (self entries flatCollect: #keywords as: Set) asArray sortedAs: #keyword
 ]
 
-{ #category : #accessing }
-NVMainTopic >> entries [
-
-	^ entries
-]
-
-{ #category : #accessing }
-NVMainTopic >> entries: anObject [
-
-	entries := anObject
-]
-
-{ #category : #adding }
-NVMainTopic >> initialize [
-	super initialize.
-	entries := OrderedCollection new
-]
-
 { #category : #visualization }
 NVMainTopic >> inspectorTrend [
 	<inspectorPresentationOrder: 90 title: 'Trend'>
 	^ SpRoassal3InspectorPresenter new
 		canvas: self trend;
 		yourself
-]
-
-{ #category : #accessing }
-NVMainTopic >> keyword [
-
-	^ keyword
-]
-
-{ #category : #accessing }
-NVMainTopic >> keyword: anObject [
-
-	keyword := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,15 +45,9 @@ NVMainTopic >> maxPub [
 	
 ]
 
-{ #category : #'as yet unclassified' }
-NVMainTopic >> numberOfEntries [
-	^ entries size
-]
-
-{ #category : #printing }
-NVMainTopic >> printOn: str [
-	keyword ifNil: [ str nextPutAll: 'UNKNOWN' ]
-		ifNotNil: [ str nextPutAll: keyword ]
+{ #category : #accessing }
+NVMainTopic >> subtopics [
+	^ self entries flatCollect: #subtopics
 ]
 
 { #category : #'as yet unclassified' }

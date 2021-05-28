@@ -48,7 +48,7 @@ NitVizExample >> data3 [
 		entry year: aLine third asInteger.
 		"entry activities: aLine fourth."
 		entry mainRETopicsAsString: aLine fourth.
-		entry subtopics: aLine fifth.
+		entry subtopicsAsString: aLine fifth.
 		entry otherTopics: aLine sixth.
 		entries add: entry
 	].

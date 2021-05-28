@@ -8,6 +8,7 @@ Class {
 		'activities',
 		'subtopics',
 		'otherTopics',
+		'subtopicsAsString',
 		'mainRETopicsAsString',
 		'mainRETopics'
 	],
@@ -32,6 +33,12 @@ NVEntry >> addMainTopic: aMainTopic [
 	mainRETopics add: aMainTopic
 ]
 
+{ #category : #adding }
+NVEntry >> addSubTopic: aSubTopic [
+	self assert: [ aSubTopic class == NVSubTopic ] description: 'Wrong type'.
+	subtopics add: aSubTopic
+]
+
 { #category : #accessing }
 NVEntry >> index [
 
@@ -47,7 +54,8 @@ NVEntry >> index: anObject [
 { #category : #initialization }
 NVEntry >> initialize [
 	super initialize.
-	mainRETopics := OrderedCollection new
+	mainRETopics := OrderedCollection new.
+	subtopics := OrderedCollection new
 ]
 
 { #category : #accessing }
@@ -95,27 +103,25 @@ NVEntry >> otherTopics: anObject [
 ]
 
 { #category : #accessing }
-NVEntry >> someMainTopics [
-
-	^ mainRETopicsAsString
-]
-
-{ #category : #accessing }
-NVEntry >> someMainTopics: aString [
-
-	mainRETopicsAsString := aString
-]
-
-{ #category : #accessing }
 NVEntry >> subtopics [
-
 	^ subtopics
 ]
 
 { #category : #accessing }
-NVEntry >> subtopics: anObject [
+NVEntry >> subtopicsAsString [
+	^ subtopicsAsString
+]
 
-	subtopics := anObject
+{ #category : #accessing }
+NVEntry >> subtopicsAsString: aString [
+	aString ifNil: [ subtopicsAsString := ''. ^ self ].
+	subtopicsAsString := aString
+]
+
+{ #category : #accessing }
+NVEntry >> subtopicsAsWords [
+	^ (subtopicsAsString substrings: ',', String crlf) collect: #asLowercase
+
 ]
 
 { #category : #accessing }

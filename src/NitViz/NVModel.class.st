@@ -5,14 +5,15 @@ Class {
 		'entries',
 		'years',
 		'tools',
-		'mainTopics'
+		'mainTopics',
+		'subTopics'
 	],
 	#category : #NitViz
 }
 
 { #category : #building }
 NVModel >> build [
-	| dic year tool wordsTmp aMainTopic |
+	| dic year tool wordsTmp aMainTopic aSubTopic |
 	dic := self entries groupedBy: #year.
 	years := OrderedCollection new.
 	dic associations do: [ :assoc |
@@ -44,6 +45,20 @@ NVModel >> build [
 					 ] ]
 		 ].
 	
+	subTopics := OrderedCollection new.
+	wordsTmp := (entries flatCollect: #subtopicsAsWords) removeDuplicates.
+	wordsTmp do: [ :w |
+		aSubTopic := NVSubTopic new.
+		aSubTopic keyword: w.
+		subTopics add: aSubTopic.
+		
+		self entries do: [ :e |
+			(e subtopicsAsWords includes: w)
+				ifTrue: [ 
+					aSubTopic addEntry: e.
+					e addSubTopic: aSubTopic.
+					 ] ]
+		 ].
 	
 
 ]
@@ -228,6 +243,24 @@ NVModel >> tools [
 NVModel >> tools: anObject [
 
 	tools := anObject
+]
+
+{ #category : #visualization }
+NVModel >> treemap [
+| t |
+t := RSTreeMap new.
+t 
+	extent: 200 asPoint;
+	from: self mainTopics
+		using: [ :topic | topic class == NVMainTopic ifTrue: [ topic subtopics ] ifFalse: [ #() ] ];
+		leafWeight: #numberOfEntries.
+"t modelWeight: [ :n | n numberOfEntries ]."
+t build.
+t shapes 
+		select: [ :box | box isSLeaf ]
+		thenDo: [ :box |
+			box color: (Color blue darker)].
+^ t canvas
 ]
 
 { #category : #accessing }
